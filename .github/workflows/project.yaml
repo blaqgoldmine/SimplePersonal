@@ -10,6 +10,16 @@ jobs:
     steps:
       - name: preparation
         run: echo "Preparing to deploy ..."
+      - name: checks out the repository
+        uses: actions/checkout@v4
+      - name: "post to slack"
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+            channel-id: 'C067S5EPGQ2'
+            slack-message: "Github build result: ${{ job.status }}\n${{ github.event.pull request. html url|| github.event.head_commit.url }}"
+        env:
+           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
     
       - name: checks out the repository
         uses: actions/checkout@v4
@@ -21,7 +31,7 @@ jobs:
             password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: "Build our code"
         env:
-          IMAGE_NAME: simplepersonal101
+          IMAGE_NAME: simplepersonal1m
           VERSION: latest
           USERNAME: blaqgoldmine
         run: |
